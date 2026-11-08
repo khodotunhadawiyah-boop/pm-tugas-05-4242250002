@@ -202,13 +202,37 @@ class KartuMenu extends StatelessWidget {
   }
 }
 
-/// Placeholder sementara, diganti di Tahap 3.
-class TombolFavorit extends StatelessWidget {
+/// Tombol favorit. Stateful kecil: hanya bagian ini yang menyimpan data berubah.
+class TombolFavorit extends StatefulWidget {
   const TombolFavorit({super.key, required this.nama});
   final String nama;
 
   @override
+  State<TombolFavorit> createState() => _TombolFavoritState();
+}
+
+class _TombolFavoritState extends State<TombolFavorit> {
+  bool _favorit = false;
+
+  void _ubah() {
+    setState(() => _favorit = !_favorit);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          _favorit
+              ? '${widget.nama} ditambahkan ke favorit'
+              : '${widget.nama} dihapus dari favorit',
+        ),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Icon(Icons.favorite_border);
+    return IconButton(
+      onPressed: _ubah,
+      icon: Icon(_favorit ? Icons.favorite : Icons.favorite_border),
+      color: _favorit ? Theme.of(context).colorScheme.primary : null,
+    );
   }
 }
